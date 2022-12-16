@@ -1,54 +1,39 @@
-import './App.css';
-import { useEffect, useState } from 'react';
-import MyAdviceComponent from './MyAdviceComponent';
-
+import "./App.css";
+import { useEffect, useState } from "react";
+import image from "./bored.jpg";
 
 function App() {
+  const [advice, setAdvice] = useState("");
 
-  // const MY_ID = "";
-  // const MY_KEY = "";
+  const getAdvice = async () => {
+    const response = await fetch(`https://www.boredapi.com/api/activity/`);
+    const data = await response.json();
+    setAdvice(data.activity);
+  };
 
-  const [mySearch, setMySearch] = useState('');
-  const [myAdvice, setMyAdvice] = useState('');
-
-  useEffect (() => {
-    const getAdvice = async() => {
-      const response = await fetch (`https://www.boredapi.com/api/activity/`);
-      const data = await response.json();
-      console.log(data)
-      setMyAdvice(data.activity)
-    }
+  useEffect(() => {
     getAdvice();
-  }, [])
-
-  const myAdviceSearch = (e) => {
-    console.log(e.target.value)
-    setMySearch(e.target.value)
-  }
+  }, []);
 
   return (
     <div className="App">
       <div className="container">
-        <p>ADVICE</p>
+        <h1>Felling bored?</h1>
+      </div>
+      <div className="container">
+        <img src={image} alt="dog" width="400px" />
       </div>
 
       <div className="container">
-        <form>
-          <input className='search' type="text" placeholder='Search...' onChange={myAdviceSearch} value={mySearch}/>
-          <div className="container">
-            <button>Click</button>
-          </div>
-        </form>
+        <button className="btn" onClick={getAdvice}>
+          Get some ideas
+        </button>
       </div>
 
-      {myAdvice => (
-        <MyAdviceComponent/>
-      )} 
-      
-
+      <div className="container">
+        <h2 className="advice">{advice}</h2>
+      </div>
     </div>
-  
   );
 }
-
 export default App;
